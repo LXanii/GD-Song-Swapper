@@ -14,9 +14,9 @@ def copy_and_replace(): # copies original file, renames, and deletes.
     print("Copying Original Song File...")
     shutil.copyfile(gd + str(song_id) + ".mp3", directory + "\\" + str(song_id) + "_copy.mp3")
     print("Swapping Old song with New...")
-    shutil.copyfile(directory + "\\" + replace + ".mp3", gd + str(song_id) + ".mp3")
-    os.remove(directory + "\\" + replace + ".mp3")
-    os.rename(directory + "\\" + str(song_id) + "_copy.mp3", directory + "\\" + replace + ".mp3")
+    shutil.copyfile(directory + "\\" + replace, gd + str(song_id) + ".mp3")
+    os.remove(directory + "\\" + replace)
+    os.rename(directory + "\\" + str(song_id) + "_copy.mp3", directory + "\\" + replace)
 
 while True:
     while True:
@@ -43,8 +43,9 @@ else:
     print("Song to Switch With: \n" + str(switch_files))
 
 while True:
-    replace = str(input("File to swap with: "))
-    if (replace + ".mp3") in switch_files: # checks for the file that was specified 
+    replace = str(input("\nFile to swap with: "))
+    if (replace + ".mp3") in switch_files: # checks for the file that was specified
+        replace = replace + ".mp3" 
         copy_and_replace()
         close = input("Done.")
         break
