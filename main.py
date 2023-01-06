@@ -1,13 +1,11 @@
 import os, shutil
+from googlesearch import search
 
 switch_files = []
+newgrounds = []
 directory = os.getcwd() # gets current file directory
 
-appdata = os.getenv('APPDATA') # gets appdata path location
-for i in range(7): # this loop removes the ending of the file directory so we can add local later
-    appdata = appdata[:-1]
-
-appdata = appdata + "Local" # Described Above ^^^^
+appdata = os.getenv('LOCALAPPDATA') # gets appdata path location
 gd = appdata + "\\GeometryDash\\" # gets the geometry dash song folder
 
 def copy_and_replace(): # copies original file, renames, and deletes.
@@ -19,19 +17,44 @@ def copy_and_replace(): # copies original file, renames, and deletes.
     os.rename(directory + "\\" + str(song_id) + "_copy.mp3", directory + "\\" + replace)
 
 while True:
-    while True:
-        try:
-            song_id = int(input("Song ID: ")) # gets the song id
-            break
-        except:
-            print("\nSong File must be an integer.\n")
-            continue
-    if os.path.exists(gd + str(song_id) + ".mp3"): # checks if the song exist in the gd song folder
-        print("\nSong File Found\n")
+    try:
+        song_type = str(input("Name or ID: ")).upper()
         break
-    else:
-        print("\nSong File not found.\n")
+    except:
         continue
+
+while song_type:
+    if song_type == "ID":
+        while True:
+            try:
+                song_id = int(input("Song ID: ")) # gets the song id
+                break
+            except:
+                print("\nSong File must be an integer.\n")
+                continue
+        if os.path.exists(gd + str(song_id) + ".mp3"): # checks if the song exist in the gd song folder
+            print("\nSong File Found\n")
+            break
+        else:
+            print("\nSong File not found.\n")
+            continue
+    elif song_type == "NAME":
+        while True:
+            try:
+                song_id = str(input("Song Name [Artist - Song name]: ")).replace("-", "") # gets the song from newgrounds
+                for i in search(song_id + " newgrounds", num_results=1):
+                    song_id = i.rsplit("/", 1)[-1]
+                    break
+                break
+            except:
+                print("\nIssue Finding Song.\n")
+                continue
+        if os.path.exists(gd + str(song_id) + ".mp3"): # checks if the song exist in the gd song folder
+            print("\nSong File Found\n")
+            break
+        else:
+            print("\nSong File not found.\n")
+            continue
 
 for i in os.listdir(): # checks all files in directory
     if ".mp3" in i:
