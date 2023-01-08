@@ -1,4 +1,5 @@
-import os, shutil
+import os
+from shutil import copyfile
 from googlesearch import search
 
 switch_files = []
@@ -9,10 +10,10 @@ appdata = os.getenv('LOCALAPPDATA') # gets appdata path location
 gd = appdata + "\\GeometryDash\\" # gets the geometry dash song folder
 
 def copy_and_replace(): # copies original file, renames, and deletes.
-    print("Copying Original Song File...")
-    shutil.copyfile(gd + str(song_id) + ".mp3", directory + "\\" + str(song_id) + "_copy.mp3")
+    print("\nCopying Original Song File...")
+    copyfile(gd + str(song_id) + ".mp3", directory + "\\" + str(song_id) + "_copy.mp3")
     print("Swapping Old song with New...")
-    shutil.copyfile(directory + "\\" + replace, gd + str(song_id) + ".mp3")
+    copyfile(directory + "\\" + replace, gd + str(song_id) + ".mp3")
     os.remove(directory + "\\" + replace)
     os.rename(directory + "\\" + str(song_id) + "_copy.mp3", directory + "\\" + replace)
 
@@ -33,10 +34,10 @@ while song_type:
                 print("\nSong File must be an integer.\n")
                 continue
         if os.path.exists(gd + str(song_id) + ".mp3"): # checks if the song exist in the gd song folder
-            print("\nSong File Found\n")
+            print("\nSong File Found. [" + song_id + "]\n")
             break
         else:
-            print("\nSong File not found.\n")
+            print("\nSong File not found. [" + song_id + "]\n")
             continue
     elif song_type == "NAME":
         while True:
@@ -50,20 +51,37 @@ while song_type:
                 print("\nIssue Finding Song.\n")
                 continue
         if os.path.exists(gd + str(song_id) + ".mp3"): # checks if the song exist in the gd song folder
-            print("\nSong File Found\n")
+            print("\nSong File Found. [" + song_id + "]\n")
             break
         else:
-            print("\nSong File not found.\n")
+            print("\nSong File not found. [" + song_id + "]\n")
             continue
+    else:
+        print("Error.")
 
 for i in os.listdir(): # checks all files in directory
     if ".mp3" in i:
         switch_files.append(i) # adds files to the directory if they have the file extension ".mp3"
-    
+
+
 if len(switch_files) == 0: # checks if there is anything in the list
     print("No mp3 files found.\n")
 else:
-    print("Song to Switch With: \n" + str(switch_files))
+    search_term = str(input("Search Term [Leave Blank if None]: "))
+    if search_term == "": # checks for a search term, if none then list all from the switch files list
+        print("\nSong to Switch With: \n")
+        search_term_found = True
+        for i in switch_files:
+            print(str(i))
+    else: # if there is a search term, look for that search term and print the results
+        print("\nSong to Switch With: \n")
+        for i in switch_files:
+            if search_term in i:
+                print(str(i))
+                search_term_found = True
+
+if search_term_found == False:
+    print("Audio with that name not found.")
 
 while True:
     replace = str(input("\nFile to swap with: "))
